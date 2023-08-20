@@ -7,9 +7,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import classNames from "classnames/bind";
 import styles from "./Search.module.scss";
 import { useDebounce } from "~/hook";
-import * as searchService from '~/apiServices/searchServices'
-
-
+import * as searchService from "~/services/searchService";
 
 const cx = classNames.bind(styles);
 
@@ -26,14 +24,13 @@ function Search() {
             setSearchResult([]);
             return;
         }
-        
 
         const fetchApi = async () => {
             setLoading(true);
             const result = await searchService.searchApi(debounced);
-            setSearchResult(result)
-            setLoading(false)
-        }
+            setSearchResult(result);
+            setLoading(false);
+        };
 
         fetchApi();
     }, [debounced]);
@@ -51,22 +48,20 @@ function Search() {
     const handleChange = (e) => {
         const searchValue = e.target.value;
 
-        if (!searchValue.startsWith(' ')) {
+        if (!searchValue.startsWith(" ")) {
             setSearchValue(searchValue);
         }
-        
-    }
+    };
 
     const handleSumit = (e) => {
         e.preventDefault();
-    }
+    };
 
     return (
         <div>
             <HeadlessTippy
                 interactive
                 visible={showResult && searchResult.length > 0}
-              
                 render={(attrs) => (
                     <div className={cx("search-result")} tabIndex="-1" {...attrs}>
                         <PopperWrapper>
@@ -88,15 +83,15 @@ function Search() {
                         value={searchValue}
                         onFocus={() => setShowResult(true)}
                     />
-    
+
                     {!!searchValue && !loading && (
                         <button className={cx("clear")} onClick={handleClear}>
                             <FontAwesomeIcon icon={faCircleXmark} />
                         </button>
                     )}
-    
+
                     {loading && <FontAwesomeIcon className={cx("loading")} icon={faSpinner} />}
-                    
+
                     <button className={cx("search-btn")} onMouseDown={handleSumit}>
                         <FontAwesomeIcon icon={faMagnifyingGlass} />
                     </button>
